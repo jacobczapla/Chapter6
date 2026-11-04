@@ -20,3 +20,8 @@ New Concepts Used
 - ROLLUP
 - GROUPING and COALESCE functions
 - 
+
+
+
+Query 1
+![Project Logo](Assets/Query6_1.png)
