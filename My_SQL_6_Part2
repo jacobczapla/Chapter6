@@ -56,3 +56,27 @@ FROM payment p
 JOIN customer c ON p.customer_id = c.customer_id
 JOIN address a ON c.address_id = a.address_id
 GROUP BY a.district, a.city_id WITH ROLLUP;
+/********************************************
+Query 8: GROUPING and COALESCE functions
+Rewrite Query 7 to replace the null summary values with City Sum and District Sum values
+• Note: MariaDB does not support using ORDER BY when using WITH ROLLLUP
+https://mariadb.com/kb/en/select-with-rollup/
+WITH ROLLUP cannot be used with ORDER BY. Some sorting is still possible by using ASC or DESC clauses with
+the GROUP BY column, although the super-aggregate rows will always be added last.
+• Note: MariaDB does not support using IF GROUPING
+o https://mariadb.com/kb/en/select-with-rollup/
+NOTE: COALESCE means come together to form one mass or whole
+Example: COALESCE(district, "District Sum") as district
+********************************************/
+SELECT
+    COALESCE(a.district, 'District Sum') AS district,
+    COALESCE(a.city_id, 'City Sum') AS city,
+    COUNT(*) AS total_payments,
+    MIN(p.amount) AS min_payment,
+    MAX(p.amount) AS max_payment,
+    ROUND(AVG(p.amount), 2) AS avg_payment,
+    SUM(p.amount) AS total_amount_paid
+FROM payment p
+JOIN customer c ON p.customer_id = c.customer_id
+JOIN address a ON c.address_id = a.address_id
+GROUP BY a.district, a.city_id WITH ROLLUP;
