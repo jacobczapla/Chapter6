@@ -16,3 +16,23 @@ JOIN customer c ON p.customer_id = c.customer_id
 WHERE c.store_id = 1
 GROUP BY p.customer_id
 HAVING SUM(p.amount) > 100.00;
+
+/*******************************************
+Query 6: WHERE vs HAVING - Part 2
+Rewrite query 5 to include store_id in the column list. Now that store_id is in the column list, you can move the filter to
+the HAVING clause. NOTE: Query 5 is more efficient than Query 6
+******************************************/
+SELECT
+    p.customer_id,
+    c.store_id,
+    CONCAT(c.last_name, ', ', c.first_name) AS customer_name,
+    COUNT(*) AS total_payments,
+    MIN(p.amount) AS min_payment,
+    MAX(p.amount) AS max_payment,
+    ROUND(AVG(p.amount), 2) AS avg_payment,
+    SUM(p.amount) AS total_amount_paid
+FROM payment p
+JOIN customer c ON p.customer_id = c.customer_id
+GROUP BY p.customer_id, c.store_id
+HAVING c.store_id = 1
+    AND SUM(p.amount) > 100.00;
